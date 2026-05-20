@@ -40,5 +40,29 @@ public class Main {
                 System.out.println(person.getFullName());
             }
         }
+        //Step 3: calculations
+        int totalAge = 0;
+        int oldest = people.get(0).getAge();
+        int youngest = people.get(0).getAge();
+
+        for(Person p : people){
+            int age = p.getAge();
+
+            totalAge += age;
+
+            if(age > oldest){
+                oldest = age;
+            }
+            if (age < youngest){
+                youngest = age;
+            }
+        }
+        double averageAge = (double) totalAge / people.size();
+        
+        System.out.println("\n--- Age Stats ---");
+        System.out.println("Average age: " + averageAge);
+        System.out.println("Oldest age: " + oldest);
+        System.out.println("Youngest age: " + youngest);
+
     }
 }
