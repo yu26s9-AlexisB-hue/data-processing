@@ -20,6 +20,25 @@ public class Main {
         people.add(new Person("James", "Martinez", 50));
         people.add(new Person("Sophia", "Lopez", 18));
 
-        
+        //step 2: search by name
+        String search = Console.promptForString("Enter a first or last name to search: ");
+
+        List<Person> matches = new ArrayList<>();
+
+        for (Person person : people){
+            if (person.getFirstName().toLowerCase().contains(search)){
+                matches.add(person);
+            }
+        }
+
+        System.out.println("\n--- Search Results ---");
+        if (matches.isEmpty()){
+            System.out.println("No matches found.");
+        }else{
+            //almost forgot to add an else factor
+            for (Person person: matches){
+                System.out.println(person.getFullName());
+            }
+        }
     }
 }
