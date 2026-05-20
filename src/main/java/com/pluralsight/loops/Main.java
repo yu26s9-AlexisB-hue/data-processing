@@ -1,7 +1,10 @@
 package com.pluralsight.loops;
 
+import com.pluralsight.Person;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[]args){
@@ -21,46 +24,74 @@ public class Main {
         people.add(new Person("Sophia", "Lopez", 18));
 
         //step 2: search by name
-        String search = Console.promptForString("Enter a first or last name to search: ");
+        String search = Console.promptForString("Enter a first or last name to search: ").toLowerCase();
 
-        List<Person> matches = new ArrayList<>();
+        ////old way to search
+////        List<Person> matches = new ArrayList<>();
+//
+//        for (Person person : people){
+//            if (person.getFirstName().toLowerCase().contains(search)){
+//                matches.add(person);
+//            }
+//        }
+//
+//        System.out.println("\n--- Search Results ---");
+//        if (matches.isEmpty()){
+//            System.out.println("No matches found.");
+//        }else{
+//            //almost forgot to add an else factor
+//            for (Person person: matches){
+//                System.out.println(person.getFullName());
+////            }
+////        }
+//// Step 3: calculations
+////        int totalAge = 0;
+////        int oldest = people.get(0).getAge();
+////        int youngest = people.get(0).getAge();
+////
+////        for(Person p : people){
+////            int age = p.getAge();
+////
+////            totalAge += age;
+////
+////            if(age > oldest){
+////                oldest = age;
+////            }
+////            if (age < youngest){
+////                youngest = age;
+////            }
+////        }
+////        double averageAge = (double) totalAge / people.size();
+////
+////        System.out.println("\n--- Age Stats ---");
+////        System.out.println("Average age: " + averageAge);
+////        System.out.println("Oldest age: " + oldest);
+////        System.out.println("Youngest age: " + youngest);
 
-        for (Person person : people){
-            if (person.getFirstName().toLowerCase().contains(search)){
-                matches.add(person);
-            }
-        }
+        List<Person> matches = people.stream().filter(p ->
+                p.getFirstName().toLowerCase().contains(search)
+                || p.getLastName().toLowerCase().contains(search)
+                )
+                .collect(Collectors.toList());
 
         System.out.println("\n--- Search Results ---");
-        if (matches.isEmpty()){
-            System.out.println("No matches found.");
-        }else{
-            //almost forgot to add an else factor
-            for (Person person: matches){
-                System.out.println(person.getFullName());
-            }
-        }
-        //Step 3: calculations
-        int totalAge = 0;
-        int oldest = people.get(0).getAge();
-        int youngest = people.get(0).getAge();
+        matches.forEach(p -> System.out.println(p.getFullName()));
 
-        for(Person p : people){
-            int age = p.getAge();
+        //Average age using streams(map + reduce)
+        double averageAge = people.stream().map(Person::getAge)
+                .reduce(0, Integer::sum) / (double) people.size();
 
-            totalAge += age;
+        //step 3: oldest + youngest using Streams
+        int oldest = people.stream()
+                .map(Person::getAge)
+                .max(Integer::compareTo)
+                .orElse(0);
 
-            if(age > oldest){
-                oldest = age;
-            }
-            if (age < youngest){
-                youngest = age;
-            }
-        }
-        double averageAge = (double) totalAge / people.size();
-        
-        System.out.println("\n--- Age Stats ---");
-        System.out.println("Average age: " + averageAge);
+        int youngest = people.stream()
+                .map(Person::getAge)
+                .min(Integer::compareTo)
+                .orElse(0);
+
         System.out.println("Oldest age: " + oldest);
         System.out.println("Youngest age: " + youngest);
 
